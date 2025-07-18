@@ -1,33 +1,20 @@
-// ✅ Full drop-in solution: use AssemblyAI + Hugging Face + Firebase (no OpenAI)
-// 🔁 Use in your stopRecording function after uploading to Cloudinary
-
-// import { addDoc, collection } from "firebase/firestore";
-// import { db } from "../config/firebaseConfig";
-import { pipeline } from "@xenova/transformers";
 import axios from "axios";
 
 const ASSEMBLY_API_KEY = "fd8fa98dfb0448e4aef3bab26ba9d22a";
+const HF_TOKEN = "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";
 
 export const processAudio = async (cloudinaryUrl, user) => {
   try {
     console.log("🧠 Sending audio to AssemblyAI...");
     const transcriptId = await submitToAssembly(cloudinaryUrl);
     let transcript = await pollAssemblyTranscript(transcriptId);
-    console.log(transcript)
-    transcript = "There are thousands  of languages in the world today. Some of them are strong languages spoken by many millions of people, while others are spoken by smaller groups of people, sometimes numbering in the hundreds. As languages die, benefits accrue to human society, but also drawbacks. It is certainly not advantageous for everybody everywhere. From a practical point of view, having fewer languages can lead to greater ease in communication. This is because when people share a language, then information and ideas can flow more easily, which is of utmost importance in a globalised world. In addition, there is an economic advantage, or economies of scale, since information can be presented in written form in greater bulk, meaning there is no need for translations, which can be costly. Thus, internationally, the flow of ideas and information is facilitated through the common language. There is another side, though. First of all, those who have lost a language have also lost a culture, a way of expressing themselves, and a way of understanding the world and their experience of the world. They will never be able to express themselves fully in their new language. Secondly, the quality of communication in the common language is limited. The reason for this is that people are writing and reading in an acquired language, not the mother tongue. Also, this acquired language may simply be unable to express some of the culturally-bound ideas of the non-native speaker. In brief, then, language death is a tragedy. Those whose language dies lose part of their identity, and a way to give expression to their deep thoughts and feelings. For the rest of the world, there is a loss of diversity. Along with the language, a whole culture and way of expressing this culture die. Things of deep human value that could be expressed before are now silenced."
-
+    console.log(transcript);
+    transcript =
+      "Some people claim that due to the rapid changes occurring in modern work places, it is better to employ younger than older people. I do not believe that this is the case. One argument in support of younger employees is that older employees could be more set in their ways and potentially against any change. To an extent this may be true, but there are many flexible and intelligent workers over 50, while there are inflexible and narrow-minded younger ones. Attitude towards change is a result not of age but of personality type. That said, physical changes occurring with age could mean certain jobs are more suited to a younger person. For instance, psychologists seem to be in agreement that memory declines with age for people not remaining mentally active. In high-tech industries such as computer programming, where it is so important to be able to work with so much information, numbers and calculations, being younger may be an advantage. However, older workers have a wide range of other positive attributes that they can bring to their working environment. Generally, they have more work experience than those who are younger. In addition, as can be seen with the trend of many department stores in the UK to take on older people, they are seen to be more reliable and respectful. These are important in any kind of working environment. In conclusion, therefore, there is not the evidence to support employing young people as opposed to those over 50. It would seem that a mix of the best qualities of old and young is preferential in order to ensure the most productive environment evolves.";
 
     console.log("✍️ Sending to Hugging Face for summarization...");
     const summary = await summarizeText(transcript);
-
-    // console.log("📦 Saving to Firestore...");
-    // await addDoc(collection(db, "recordings"), {
-    //   url: cloudinaryUrl,
-    //   userId: user?.uid || null,
-    //   transcript,
-    //   summary,
-    //   createdAt: new Date().toISOString(),
-    // });
+    console.log(summary)
 
     return { transcript, summary };
   } catch (err) {
@@ -61,12 +48,32 @@ const pollAssemblyTranscript = async (id) => {
   }
 };
 
+// const summarizeText = async (text) => {
+//   const summarizer = await pipeline(
+//     "summarization",
+//     "Xenova/distilbart-cnn-12-6"
+//   );
+//   const response = await summarizer(text);
+//   console.log(response)
+//   return response[0].summary_text;
+// };
+
 const summarizeText = async (text) => {
-  const summarizer = await pipeline(
-    "summarization",
-    "Xenova/distilbart-cnn-12-6"
-  );
-  const response = await summarizer(text);
-  console.log(response)
-  return response[0].summary_text;
+  try {
+    const response = await axios.post(
+      `https://router.huggingface.co/hf-inference/models/sshleifer/distilbart-cnn-12-6`,
+      { inputs: text },
+      {
+        headers: {
+          Authorization: `Bearer ${HF_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const result = response.data[0];
+    const summary = result["summary_text"];
+    return summary;
+  } catch (error) {
+    console.log(error);
+  }
 };

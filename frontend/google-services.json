@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "449959977950",
+    "project_id": "smart-minutes-58648",
+    "storage_bucket": "smart-minutes-58648.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:449959977950:android:848f9430821b023c17b34f",
+        "android_client_info": {
+          "package_name": "com.x212133bhavani.smartminutesandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "449959977950-flkjlafdncn0uup00ra0hersue4sq2ra.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.x212133bhavani.smartminutesandroid",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "449959977950-cml6odiin97usjvfdlgummujpi9e2ogm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrZF3cZWLMcLZj6ISplduyAiX6ckl1cNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "449959977950-cml6odiin97usjvfdlgummujpi9e2ogm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

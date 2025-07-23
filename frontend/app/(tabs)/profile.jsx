@@ -1,109 +1,183 @@
 import {
+  ActivityIndicator,
+  Alert,
   Modal,
   SafeAreaView,
   ScrollView,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import CustomHeader from "../../components/CustomHeader";
 import { useAuth } from "../../context/AuthContext";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Toast } from "toastify-react-native";
 
 const Profile = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, changeName, authLoading, changePassword } = useAuth();
   const [openProfileModal, setOpenProfileModal] = useState(false);
+  const [name, setName] = useState("");
+
+  const handleNameChange = async () => {
+    setName(name.trim());
+    if (name === "" || name === null) {
+      Alert.alert("Error", "Enter a valid Name!");
+      return;
+    } else if (name === user.displayName) return;
+    await changeName(name);
+    Toast.show({
+      type: "custom",
+      text1: "Success",
+      text2: "Name changed succesfilly!"
+    })
+  };
+
+  const handleChangePassword = async () =>{
+    console.log("change password")
+    await changePassword();
+    Alert.alert("Password Reset", "A Link has been sent to your registered email for resetting password!")
+  }
 
   const handleProfileEdit = () => {
     setOpenProfileModal(true);
   };
 
-  return (
-    <SafeAreaView>
-      {/* HEADER */}
-      <CustomHeader title="Profile" />
+  useEffect(() => {
+    setName(user.displayName);
+  }, []);
 
-      <View
-        style={{
-          height: "90%",
-          backgroundColor: "#FFE5E5",
-        }}
-        className="flex gap-2"
-      >
-        {/* USER DETAILS */}
-        <View className="m-5 mb-1 p-5 flex flex-row items-center justify-around gap-2">
-          <Ionicons
-            className="m-3 p-3 border border-white bg-[#756AB6] rounded-full"
-            name="person"
-            size={32}
-            color="white"
-          />
-          <View>
-            <Text className="text-xl font-medium">{user.name} Murali</Text>
-            <Text className="text-base font-normal">{user.email}</Text>
-          </View>
-        </View>
+  {
+    return authLoading && user.uid ? (
+      <View className="flex-1 items-center justify-center bg-[#FFE5E5]">
+        <ActivityIndicator size={"large"} color="#071952" />
+      </View>
+    ) : (
+      <SafeAreaView>
+        {/* HEADER */}
+        <CustomHeader title="Profile" />
 
-        {/* BORDER LINE*/}
-        <View className="flex items-center">
-          <View className="w-11/12 -mt-5 border-b-2 border-[#071952]" />
-        </View>
-
-        {/* OPTIONS */}
         <View
-          contentContainerStyle={{ display: "flex" }}
-          className="bg-white m-5 rounded-lg border border-[#071952]"
+          style={{
+            height: "90%",
+            backgroundColor: "#FFE5E5",
+          }}
+          className="flex gap-2"
         >
-          <TouchableOpacity
-            onPress={handleProfileEdit}
-            className="m-2 p-3 flex flex-row gap-4 items-center border-b border-[#7a04c9]"
-          >
-            <AntDesign name="edit" size={28} color="black" />
-            <Text className="text-base">Edit Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={logout}
-            className="-mt-2 m-2 p-3 flex flex-row gap-4 items-center"
-          >
-            <FontAwesome name="sign-out" size={28} color="#C41E3A" />
-            <Text className="text-[#C41E3A]">Sign Out</Text>
-          </TouchableOpacity>
-        </View>
-
-        <Modal
-          visible={openProfileModal}
-          animationType="slide"
-          transparent={true}
-          onRequestClose={() => setOpenProfileModal(false)}
-          backdropColor={"#FFE5E5"}
-        >
-          <View className="flex-1 items-center justify-end bg-black/50">
-            <View className="h-4/5 w-screen bg-[#FFE5E5] border-2 border-[#071952] rounded-t-3xl p-4">
-              <View className="flex flex-row items-center gap-4">
-                <AntDesign name="edit" size={24} color="#756AB6" />
-                <Text className="text-xl text-[#071952] font-bold">
-                  Edit Profile
-                </Text>
-                <Ionicons
-                  onPress={() => setOpenProfileModal(false)}
-                  className="ml-auto p-1 bg-gray-300 rounded-full border"
-                  name="close"
-                  size={18}
-                  color="#C41E3A"
-                />
-              </View>
-
-              {/* BORDER LINE*/}
-              <View className="flex items-center">
-                <View className="w-screen mt-4 border-b-2 border-[#071952]" />
-              </View>
+          {/* USER DETAILS */}
+          <View className="m-5 mb-1 p-5 flex flex-row items-center justify-around gap-2">
+            <Ionicons
+              className="m-3 p-3 border border-white bg-[#756AB6] rounded-full"
+              name="person"
+              size={32}
+              color="white"
+            />
+            <View>
+              <Text className="text-xl font-medium max-w-52 text-wrap">{user.displayName}</Text>
+              <Text className="text-base font-normal max-w-60 text-wrap">{user.email}</Text>
             </View>
           </View>
-        </Modal>
-      </View>
-    </SafeAreaView>
-  );
+
+          {/* BORDER LINE*/}
+          <View className="flex items-center">
+            <View className="w-11/12 -mt-5 border-b-2 border-[#071952]" />
+          </View>
+
+          {/* OPTIONS */}
+          <View
+            contentContainerStyle={{ display: "flex" }}
+            className="bg-white m-5 rounded-lg border border-[#071952]"
+          >
+            <TouchableOpacity
+              onPress={handleProfileEdit}
+              className="m-2 p-3 flex flex-row gap-4 items-center border-b border-[#7a04c9]"
+            >
+              <AntDesign name="edit" size={28} color="black" />
+              <Text className="text-base">Edit Profile</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={logout}
+              className="-mt-2 m-2 p-3 flex flex-row gap-4 items-center"
+            >
+              <FontAwesome name="sign-out" size={28} color="#C41E3A" />
+              <Text className="text-[#C41E3A]">Sign Out</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Modal
+            visible={openProfileModal}
+            animationType="slide"
+            transparent={true}
+            onRequestClose={() => setOpenProfileModal(false)}
+            backdropColor={"#FFE5E5"}
+          >
+            <View className="flex-1 items-center justify-center bg-black/50">
+              <View className="h-8/12 w-11/12 bg-[#FFE5E5] p-4 rounded-lg border-2 border-red-200">
+                <View className="flex flex-row items-center gap-4 border-b-2 p-2">
+                  <AntDesign name="edit" size={24} color="#756AB6" />
+                  <Text className="text-xl text-[#756AB6] font-bold">
+                    Edit Profile
+                  </Text>
+                  <Ionicons
+                    onPress={() => setOpenProfileModal(false)}
+                    className="ml-auto p-1 bg-gray-300 rounded-full border"
+                    name="close"
+                    size={18}
+                    color="#C41E3A"
+                  />
+                </View>
+
+                {/* MAIN CONTENT */}
+                <View className="mt-2">
+                  <View className="flex flex-row gap-2 items-center">
+                    <Text className="m-2 p-2 text-base font-medium">
+                      Name :
+                    </Text>
+                    <TextInput
+                      value={name}
+                      onChangeText={(e) => setName(e)}
+                      className="m-2 px-2 text-base text-black bg-white min-w-52 w-auto h-auto rounded-md text-wrap max-w-64"
+                    />
+                  </View>
+                  <View className="flex flex-row gap-2 items-center">
+                    <Text className="m-2 p-2 text-base font-medium">
+                      Email :
+                    </Text>
+                    <Text className="m-2 px-2 text-base text-black min-w-52 w-auto h-auto rounded-md text-wrap max-w-64">
+                      {user.email}
+                    </Text>
+                  </View>
+                  <View className="flex flex-row gap-2 items-center">
+                    <Text className="m-2 p-2 text-base font-medium">
+                      Email :
+                    </Text>
+                    <TouchableOpacity onPress={handleChangePassword} className="m-2 p-2 text-base w-auto h-auto bg-blue-500 rounded-md">
+                      <Text className="text-white">Change Password</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View className="flex flex-row gap-2 items-center">
+                    <Text className="m-2 p-2 text-base font-medium">
+                      Created At :
+                    </Text>
+                    <Text className="my-2 text-base text-black align-middle min-w-52 w-auto h-12 rounded-md right-3">
+                      {user.metadata.creationTime}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={handleNameChange}
+                    className="m-auto p-3 bg-green-400 rounded-lg"
+                  >
+                    <Text>Save Changes</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        </View>
+      </SafeAreaView>
+    );
+  }
 };
 
 export default Profile;

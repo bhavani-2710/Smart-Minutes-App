@@ -7,12 +7,15 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
   sendEmailVerification,
+  sendPasswordResetEmail,
   signInWithCredential,
   signInWithEmailAndPassword,
   signOut,
+  updateCurrentUser,
+  updatePassword,
   updateProfile,
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, query, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
 import { auth, db } from "../config/firebaseConfig";
@@ -128,10 +131,9 @@ export const AuthProvider = ({ children }) => {
 
       // ✅ Now initiate sign-in
       const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
 
       // If User exits the account picker screen
-      if(userInfo.type === "cancelled") return;
+      if (userInfo.type === "cancelled") return;
 
       const idToken = userInfo.data.idToken;
       const credential = GoogleAuthProvider.credential(idToken);
@@ -167,6 +169,38 @@ export const AuthProvider = ({ children }) => {
     router.replace("/");
   };
 
+  const changeName = async (newName) => {
+    if (!user) {
+      console.error("User is not available");
+      return;
+    }
+    try {
+      const currentUser = auth.currentUser;
+      await updateProfile(currentUser, { displayName: newName });
+      await setDoc(
+        doc(db, "users", currentUser.uid),
+        { name: newName },
+        { merge: true }
+      );
+      return;
+    } catch (error) {
+      console.error("❌ Error updating name:", error);
+    }
+  };
+
+  const changePassword = async() => {
+    if (!user) {
+      console.error("User is not available");
+      return;
+    }
+    try {
+      const currentUser = auth.currentUser;
+      await sendPasswordResetEmail(auth, currentUser.email)
+    } catch (error) {
+      console.error("❌ Error sending password reset email:", error);
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -179,6 +213,8 @@ export const AuthProvider = ({ children }) => {
         signup,
         logout,
         signInWithGoogle,
+        changeName,
+        changePassword
       }}
     >
       {children}

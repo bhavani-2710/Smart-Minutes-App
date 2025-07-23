@@ -19,7 +19,6 @@ const useUser = () => {
 
         if (userSnap.exists()) {
           const userData = userSnap.data();
-          setUser(userData); // 🟡 not a real FirebaseUser, but ok for fallback
           const recordings = await getUserRecordings(userData.uid);
           setRecordings(recordings);
         }
@@ -48,7 +47,7 @@ const useUser = () => {
   const deleteRecording = async (recordingId) => {
     try {
       const recordingRef = doc(db, "recordings", recordingId) // recordings UID is same as recordingId
-      const recordingSnap = await deleteDoc(recordingRef)
+      await deleteDoc(recordingRef)
       await fetchUserData(user.uid);
     } catch (error) {
       console.info(error)

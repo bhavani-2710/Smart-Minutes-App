@@ -54,7 +54,7 @@ export default function SavedScreen() {
           )}
         />
       ) : (
-        <View className="flex-1 items-center justify-center -mt-16">
+        <View className="flex-1 items-center justify-center" style={{height: "90%"}}>
           <Text className="text-lg text-[#071952] font-semibold">No recordings to display!</Text>
         </View>
       )}

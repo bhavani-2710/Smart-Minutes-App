@@ -49,7 +49,6 @@ const useUser = () => {
     try {
       const recordingRef = doc(db, "recordings", recordingId) // recordings UID is same as recordingId
       const recordingSnap = await deleteDoc(recordingRef)
-      console.log("recordingSnap", recordingSnap)
       await fetchUserData(user.uid);
     } catch (error) {
       console.info(error)

@@ -107,7 +107,7 @@ const Profile = () => {
 
           <Modal
             visible={openProfileModal}
-            animationType="slide"
+            animationType="fade"
             transparent={true}
             onRequestClose={() => setOpenProfileModal(false)}
             backdropColor={"#FFE5E5"}

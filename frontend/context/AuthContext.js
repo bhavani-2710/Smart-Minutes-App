@@ -11,8 +11,6 @@ import {
   signInWithCredential,
   signInWithEmailAndPassword,
   signOut,
-  updateCurrentUser,
-  updatePassword,
   updateProfile,
 } from "firebase/auth";
 import { doc, getDoc, query, setDoc } from "firebase/firestore";
@@ -194,8 +192,7 @@ export const AuthProvider = ({ children }) => {
       return;
     }
     try {
-      const currentUser = auth.currentUser;
-      await sendPasswordResetEmail(auth, currentUser.email)
+      await sendPasswordResetEmail(auth, user.email)
     } catch (error) {
       console.error("❌ Error sending password reset email:", error);
     }

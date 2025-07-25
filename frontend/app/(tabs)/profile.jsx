@@ -30,22 +30,25 @@ const Profile = () => {
     Toast.show({
       type: "custom",
       text1: "Success",
-      text2: "Name changed succesfilly!"
-    })
+      text2: "Name changed succesfilly!",
+    });
   };
 
-  const handleChangePassword = async () =>{
-    console.log("change password")
+  const handleChangePassword = async () => {
+    console.log("change password");
     await changePassword();
-    Alert.alert("Password Reset", "A Link has been sent to your registered email for resetting password!")
-  }
+    Alert.alert(
+      "Password Reset",
+      "A Link has been sent to your registered email for resetting password!"
+    );
+  };
 
   const handleProfileEdit = () => {
     setOpenProfileModal(true);
   };
 
   useEffect(() => {
-    setName(user.displayName);
+    setName(user.displayName ? user.displayName : user.name);
   }, []);
 
   {
@@ -74,8 +77,12 @@ const Profile = () => {
               color="white"
             />
             <View>
-              <Text className="text-xl font-medium max-w-52 text-wrap">{user.displayName}</Text>
-              <Text className="text-base font-normal max-w-60 text-wrap">{user.email}</Text>
+              <Text className="text-xl font-medium max-w-52 text-wrap">
+                {user.displayName || user.name}
+              </Text>
+              <Text className="text-base font-normal max-w-60 text-wrap">
+                {user.email}
+              </Text>
             </View>
           </View>
 
@@ -95,6 +102,12 @@ const Profile = () => {
             >
               <AntDesign name="edit" size={28} color="black" />
               <Text className="text-base">Edit Profile</Text>
+              <AntDesign
+                className="ml-auto"
+                name="right"
+                size={24}
+                color="black"
+              />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={logout}
@@ -102,6 +115,26 @@ const Profile = () => {
             >
               <FontAwesome name="sign-out" size={28} color="#C41E3A" />
               <Text className="text-[#C41E3A]">Sign Out</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* OTHER OPTIONS */}
+          <Text className="m-5 mb-0 text-[#071952] text-lg font-bold">
+            OTHER
+          </Text>
+          <View
+            contentContainerStyle={{ display: "flex" }}
+            className="bg-white m-5 mt-0 rounded-lg border border-[#071952]"
+          >
+            <TouchableOpacity className="m-2 p-3 flex flex-row gap-4 items-center border-b border-[#7a04c9]">
+              <AntDesign name="infocirlceo" size={24} color="black" />
+              <Text className="text-base">Version</Text>
+              <Text className="ml-auto text-gray-500">v1.0.0</Text>
+            </TouchableOpacity>
+            <TouchableOpacity className="-mt-2 m-2 p-3 flex flex-row gap-4 items-center">
+              <Ionicons name="globe-outline" size={24} color="black" />
+              <Text className="text-base">Language</Text>
+              <Text className="ml-auto text-gray-500">English</Text>
             </TouchableOpacity>
           </View>
 
@@ -150,9 +183,12 @@ const Profile = () => {
                   </View>
                   <View className="flex flex-row gap-2 items-center">
                     <Text className="m-2 p-2 text-base font-medium">
-                      Email :
+                      Password :
                     </Text>
-                    <TouchableOpacity onPress={handleChangePassword} className="m-2 p-2 text-base w-auto h-auto bg-blue-500 rounded-md">
+                    <TouchableOpacity
+                      onPress={handleChangePassword}
+                      className="m-2 p-2 text-base w-auto h-auto bg-blue-500 rounded-md"
+                    >
                       <Text className="text-white">Change Password</Text>
                     </TouchableOpacity>
                   </View>
@@ -161,7 +197,7 @@ const Profile = () => {
                       Created At :
                     </Text>
                     <Text className="my-2 text-base text-black align-middle min-w-52 w-auto h-12 rounded-md right-3">
-                      {user.metadata.creationTime}
+                      {user.metadata?.creationTime || user.createdAt}
                     </Text>
                   </View>
                   <TouchableOpacity

@@ -2,10 +2,10 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Text, View } from "react-native";
 
 // Tailwind-based Custom Toast
-const CustomToast = ({ text1, text2, hide }) => {
+const CustomToast = ({ text1, text2, hide, icon, iconColor }) => {
   return (
-    <View className="w-[90%] bg-[#E0AED0] rounded-xl px-4 py-3 flex-row items-center shadow-md">
-      <Ionicons name="checkmark-circle" size={24} color="green" />
+    <View className="w-[90%] bg-white rounded-xl px-4 py-3 flex-row items-center shadow-md border border-black/5">
+      <Ionicons className={`p-2 bg-gray-100 m-1 border ${iconColor === "red" ? "border-red-900/20" : "border-green-900/50"} rounded-full`} name={icon} size={20} color={iconColor} />
       
       <View className="flex-1 ml-3">
         <Text className="text-[#071952] font-bold text-lg">{text1}</Text>

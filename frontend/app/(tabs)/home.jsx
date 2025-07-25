@@ -62,7 +62,7 @@ const HomeScreen = () => {
       type: "custom",
       text1: "Saved!",
       text2: "Recording saved successfully!",
-      iconColor: "green"
+      iconColor: "green",
     });
   };
 
@@ -115,7 +115,7 @@ const HomeScreen = () => {
 
         {/* STOP AND PAUSE BUTTONS */}
         {/* Pause Button */}
-        <View className="flex flex-row items-center justify-evenly w-full gap-2 m-10">
+        <View className="flex flex-row items-center justify-evenly w-full gap-2 mt-3">
           <TouchableOpacity
             disabled={!recorderState.canRecord}
             onPress={

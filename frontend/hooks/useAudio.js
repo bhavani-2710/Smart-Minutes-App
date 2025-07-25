@@ -13,22 +13,6 @@ import { useAuth } from "../context/AuthContext";
 import { uploadAudioToCloudinary } from "../utils/cloudinary";
 import useUser from "./useUser";
 
-// Save recording url to firestore
-const saveMeetingData = async (url, transcript, summary, user) => {
-  try {
-    await addDoc(collection(db, "recordings"), {
-      url,
-      transcript,
-      summary,
-      userId: user?.uid || null,
-      createdAt: new Date().toISOString(),
-    });
-    console.log("✅ Saved URL to Firestore");
-  } catch (err) {
-    console.error("❌ Firestore save failed:", err);
-  }
-};
-
 const useAudio = () => {
   const { user } = useAuth();
   const { fetchUserData } = useUser();

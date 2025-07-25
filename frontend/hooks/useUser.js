@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { auth, db } from "../config/firebaseConfig";
 import { useAuth } from "../context/AuthContext";
 import { getUserRecordings } from "../utils/getUserRecordings";
+import { signInWithCredential } from "firebase/auth";
 
 const useUser = () => {
   const { user, setUser, setAuthLoading } = useAuth();
@@ -19,6 +20,7 @@ const useUser = () => {
 
         if (userSnap.exists()) {
           const userData = userSnap.data();
+          setUser(userData);
           const recordings = await getUserRecordings(userData.uid);
           setRecordings(recordings);
         }
@@ -46,11 +48,11 @@ const useUser = () => {
 
   const deleteRecording = async (recordingId) => {
     try {
-      const recordingRef = doc(db, "recordings", recordingId) // recordings UID is same as recordingId
-      await deleteDoc(recordingRef)
+      const recordingRef = doc(db, "recordings", recordingId); // recordings UID is same as recordingId
+      await deleteDoc(recordingRef);
       await fetchUserData(user.uid);
     } catch (error) {
-      console.info(error)
+      console.info(error);
     }
   };
 
@@ -58,7 +60,7 @@ const useUser = () => {
     fetchUserData,
     recordings,
     loadingRecordings,
-    deleteRecording
+    deleteRecording,
   };
 };
 

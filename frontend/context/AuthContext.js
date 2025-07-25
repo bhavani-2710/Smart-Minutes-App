@@ -13,7 +13,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { doc, getDoc, query, setDoc } from "firebase/firestore";
+import { doc, getDoc, query, serverTimestamp, setDoc } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
 import { auth, db } from "../config/firebaseConfig";
@@ -102,7 +102,7 @@ export const AuthProvider = ({ children }) => {
         uid: currentUser.uid,
         email: currentUser.email,
         name: currentUser.displayName,
-        createdAt: new Date().toISOString(),
+        createdAt: serverTimestamp(),
         emailVerified: currentUser.emailVerified,
       });
 
@@ -146,7 +146,7 @@ export const AuthProvider = ({ children }) => {
           email: googleUser.email,
           name: googleUser.displayName,
           photoURL: googleUser.photoURL,
-          createdAt: new Date().toISOString(),
+          createdAt: serverTimestamp(),
           emailVerified: googleUser.emailVerified,
         });
       }

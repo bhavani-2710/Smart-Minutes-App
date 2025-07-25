@@ -6,7 +6,7 @@ import {
   useAudioRecorder,
   useAudioRecorderState,
 } from "expo-audio";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useEffect } from "react";
 import { db } from "../config/firebaseConfig";
 import { useAuth } from "../context/AuthContext";
@@ -43,7 +43,7 @@ const useAudio = () => {
       const docRef = await addDoc(collection(db, "recordings"), {
         url: cloudinaryUrl,
         userId: user?.uid || null,
-        createdAt: new Date().toISOString(),
+        createdAt: serverTimestamp(),
         transcript: null,
         summary: null,
         status: "processing", // optional status field

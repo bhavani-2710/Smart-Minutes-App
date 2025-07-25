@@ -35,10 +35,17 @@ const RecordingDisplay = ({ recording, onDelete }) => {
         />
         <View>
           <Text className="text-base font-medium">
-            Recording_{recording.createdAt}
+            Recording_{recording.createdAt.toISOString()}
           </Text>
           <Text className="text-sm font-normal text-[#7a04c9]">
-            {formatTime(recording.createdAt)}
+            {recording.createdAt.toLocaleDateString("en-IN", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: true, // for AM/PM
+            })}
           </Text>
         </View>
       </TouchableOpacity>

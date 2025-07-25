@@ -197,7 +197,12 @@ const Profile = () => {
                       Created At :
                     </Text>
                     <Text className="my-2 text-base text-black align-middle min-w-52 w-auto h-12 rounded-md right-3">
-                      {user.metadata?.creationTime || user.createdAt}
+                      {user.metadata?.creationTime ||
+                        user.createdAt?.toDate().toLocaleDateString("en-IN", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })}
                     </Text>
                   </View>
                   <TouchableOpacity

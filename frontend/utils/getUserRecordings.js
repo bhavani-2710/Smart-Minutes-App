@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 
 export const getUserRecordings = async (userId) => {
@@ -7,7 +7,8 @@ export const getUserRecordings = async (userId) => {
   try {
     const recordingsQuery = query(
       collection(db, "recordings"),
-      where("userId", "==", userId)
+      where("userId", "==", userId),
+      orderBy("createdAt", "desc")
     );
 
     const recordingsSnap = await getDocs(recordingsQuery);
@@ -17,7 +18,7 @@ export const getUserRecordings = async (userId) => {
     }
     const recordings = [];
     recordingsSnap.docs.forEach((doc) => {
-      recordings.push({ ...doc.data(), id: doc.id });
+      recordings.push({ ...doc.data(), id: doc.id, createdAt: doc.data().createdAt?.toDate() ?? null });
     });
     return recordings;
   } catch (error) {

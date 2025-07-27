@@ -16,7 +16,14 @@ import { useEffect, useState } from "react";
 import { Toast } from "toastify-react-native";
 
 const Profile = () => {
-  const { user, logout, changeName, authLoading, changePassword } = useAuth();
+  const {
+    user,
+    logout,
+    changeName,
+    authLoading,
+    changePassword,
+    deleteAccount,
+  } = useAuth();
   const [openProfileModal, setOpenProfileModal] = useState(false);
   const [name, setName] = useState("");
 
@@ -31,11 +38,12 @@ const Profile = () => {
       type: "custom",
       text1: "Success",
       text2: "Name changed succesfilly!",
+      icon: "checkmark-sharp",
+      iconColor: "green",
     });
   };
 
   const handleChangePassword = async () => {
-    console.log("change password");
     await changePassword();
     Alert.alert(
       "Password Reset",
@@ -45,6 +53,46 @@ const Profile = () => {
 
   const handleProfileEdit = () => {
     setOpenProfileModal(true);
+  };
+
+  const handleDeleteAccount = async () => {
+    const result = await deleteAccount();
+    if (result.isDeleted) {
+      Toast.show({
+        type: "custom",
+        text1: "Deleted",
+        text2: "Account Deleted Successfully!",
+        icon: "checkmark-sharp",
+        iconColor: "red",
+      });
+    } else {
+      Toast.show({
+        type: "custom",
+        text1: "Error Deleting Account",
+        text2: result.message,
+        icon: "warning",
+        iconColor: "orange",
+      });
+    }
+  };
+
+  const handleDeleteAccountConfirmation = async () => {
+    Alert.alert(
+      "Delete Your Account",
+      "Are you sure you want to delete your account?",
+      [
+        { text: "No", style: "cancel", isPreferred: false },
+        {
+          text: "Yes",
+          style: "default",
+          isPreferred: true,
+          onPress: handleDeleteAccount,
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    );
   };
 
   useEffect(() => {
@@ -63,7 +111,7 @@ const Profile = () => {
 
         <View
           style={{
-            height: "90%",
+            height: "100%",
             backgroundColor: "#FFE5E5",
           }}
           className="flex gap-2"
@@ -131,10 +179,17 @@ const Profile = () => {
               <Text className="text-base">Version</Text>
               <Text className="ml-auto text-gray-500">v1.0.0</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="-mt-2 m-2 p-3 flex flex-row gap-4 items-center">
+            <TouchableOpacity className="-mt-2 m-2 p-3 flex flex-row gap-4 items-center border-b border-[#7a04c9]">
               <Ionicons name="globe-outline" size={24} color="black" />
               <Text className="text-base">Language</Text>
               <Text className="ml-auto text-gray-500">English</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleDeleteAccountConfirmation}
+              className="-mt-2 m-2 p-3 flex flex-row gap-4 items-center"
+            >
+              <FontAwesome name="remove" size={28} color="#C41E3A" />
+              <Text className="text-[#C41E3A]">Delete Account</Text>
             </TouchableOpacity>
           </View>
 

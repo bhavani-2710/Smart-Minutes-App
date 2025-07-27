@@ -63,6 +63,7 @@ const HomeScreen = () => {
       text1: "Saved!",
       text2: "Recording saved successfully!",
       iconColor: "green",
+      icon: "checkmark-sharp"
     });
   };
 

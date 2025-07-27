@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { auth, db } from "../config/firebaseConfig";
 import { useAuth } from "../context/AuthContext";
 import { getUserRecordings } from "../utils/getUserRecordings";
-import { signInWithCredential } from "firebase/auth";
 
 const useUser = () => {
   const { user, setUser, setAuthLoading } = useAuth();

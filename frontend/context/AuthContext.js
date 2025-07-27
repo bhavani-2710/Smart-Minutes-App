@@ -4,6 +4,7 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
 import {
   createUserWithEmailAndPassword,
+  deleteUser,
   GoogleAuthProvider,
   onAuthStateChanged,
   sendEmailVerification,
@@ -13,7 +14,14 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { doc, getDoc, query, serverTimestamp, setDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  doc,
+  getDoc,
+  query,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Alert } from "react-native";
 import { auth, db } from "../config/firebaseConfig";
@@ -63,11 +71,15 @@ export const AuthProvider = ({ children }) => {
           { emailVerified: true },
           { merge: true } // 🔥 merge so you don't overwrite existing data
         );
-      }
 
-      setUser(currentUser);
-      await AsyncStorage.setItem("userUID", userCredential.user.uid);
-      router.push("/home");
+        // Fetch from firestore
+        const userSnap = await getDoc(doc(db, "users", currentUser.uid));
+        const user = userSnap.data();
+        setUser(user);
+        await AsyncStorage.setItem("userUID", userCredential.user.uid);
+        router.push("/home");
+      }
+      router.replace("/sign-in");
     } catch (error) {
       console.log("❌ Sign-in error:", error);
       if (error.code === "auth/invalid-credential") {
@@ -105,8 +117,9 @@ export const AuthProvider = ({ children }) => {
         createdAt: serverTimestamp(),
         emailVerified: currentUser.emailVerified,
       });
+      const userSnap = await getDoc(doc(db, "users", currentUser.uid));
+      setUser(userSnap.data());
 
-      setUser(currentUser);
       await AsyncStorage.setItem("userUID", currentUser.uid);
 
       Alert.alert(
@@ -139,7 +152,7 @@ export const AuthProvider = ({ children }) => {
       const googleUser = result.user;
 
       const userRef = doc(db, "users", googleUser.uid);
-      const userSnap = await getDoc(userRef);
+      let userSnap = await getDoc(userRef);
       if (!userSnap.exists()) {
         await setDoc(userRef, {
           uid: googleUser.uid,
@@ -150,8 +163,8 @@ export const AuthProvider = ({ children }) => {
           emailVerified: googleUser.emailVerified,
         });
       }
-
-      setUser(googleUser);
+      userSnap = await getDoc(doc(db, "users", googleUser.uid));
+      setUser(userSnap.data());
       await AsyncStorage.setItem("userUID", googleUser.uid);
       router.replace("/home");
     } catch (error) {
@@ -173,30 +186,56 @@ export const AuthProvider = ({ children }) => {
       return;
     }
     try {
-      const currentUser = auth.currentUser;
-      await updateProfile(currentUser, { displayName: newName });
       await setDoc(
-        doc(db, "users", currentUser.uid),
+        doc(db, "users", user.uid),
         { name: newName },
         { merge: true }
       );
+      const userSnap = await getDoc(doc(db, "users", user.uid));
+      setUser(userSnap.data());
       return;
     } catch (error) {
       console.error("❌ Error updating name:", error);
     }
   };
 
-  const changePassword = async() => {
+  const changePassword = async () => {
     if (!user) {
       console.error("User is not available");
       return;
     }
     try {
-      await sendPasswordResetEmail(auth, user.email)
+      await sendPasswordResetEmail(auth, user.email);
     } catch (error) {
       console.error("❌ Error sending password reset email:", error);
     }
-  }
+  };
+
+  const deleteAccount = async () => {
+    const currentUser = auth.currentUser;
+
+    if (currentUser) {
+      try {
+        await deleteDoc(doc(db, "users", currentUser.uid));
+        await deleteUser(currentUser);
+        console.log("🗑️ User deleted successfully");
+        await AsyncStorage.removeItem("userUID1");
+        router.replace("/sign-in");
+        return { isDeleted: true };
+      } catch (error) {
+        if (error.code === "auth/requires-recent-login") {
+          // Prompt user to reauthenticate
+          return {
+            isDeleted: false,
+            message: "Please reauthenticate and try again.",
+          };
+        } else {
+          console.log("❌ Error deleting user:", error);
+          return { isDeleted: false, message: "❌ Error deleting user." };
+        }
+      }
+    }
+  };
 
   return (
     <AuthContext.Provider
@@ -211,7 +250,8 @@ export const AuthProvider = ({ children }) => {
         logout,
         signInWithGoogle,
         changeName,
-        changePassword
+        changePassword,
+        deleteAccount,
       }}
     >
       {children}

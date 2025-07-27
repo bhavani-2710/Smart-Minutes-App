@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import { signUpValidationSchema } from "../../utils/authSchema";
+import meetingPic from '../../assets/images/meeting2.png'
 
 const SignUp = () => {
   const { signup, signInWithGoogle } = useAuth();
@@ -24,8 +25,20 @@ const SignUp = () => {
   };
   return (
     <SafeAreaView className="bg-[#FFE5E5]">
-      <ScrollView contentContainerStyle={{ height: "100%" }}>
+      <ScrollView
+        contentContainerStyle={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+        className="-mt-16"
+      >
         <View className="flex items-center justify-center">
+          <Image
+            source={meetingPic}
+            style={{ height: 150, width: 250 }}
+            className="m-5"
+          />
           <Text className="text-2xl font-semibold text-[#071952] text-center">
             Get Started!
           </Text>
@@ -45,7 +58,7 @@ const SignUp = () => {
                 errors,
                 touched,
               }) => (
-                <View className="flex gap-3 p-5 m-5">
+                <View className="flex gap-3 p-5 m-5 mb-0">
                   <TextInput
                     className="bg-red-200 px-2 rounded-lg border text-[#071952] border-[#071952]"
                     onChangeText={handleChange("name")}
@@ -92,7 +105,7 @@ const SignUp = () => {
 
                   <TouchableOpacity
                     onPress={handleSubmit}
-                    className="bg-[#071952] self-center py-2 m-5 w-32 border border-[#756AB6] rounded-lg"
+                    className="bg-[#071952] self-center py-2 m-5 mb-2 w-32 border border-[#756AB6] rounded-lg"
                   >
                     <Text className="text-xl text-white font-semibold text-center">
                       Sign Up
@@ -119,7 +132,7 @@ const SignUp = () => {
 
           {/* GOOGLE */}
           <View className="flex items-center justify-center">
-            <Text className="text-center text-lg font-semibold my-5 text-[#071952]">
+            <Text className="text-center text-lg font-semibold mt-5 mb-2 text-[#071952]">
               <View className="border-b-2 border-[#AC87C5] p-2 w-24" />
               {"   "}Other Options{"  "}{" "}
               <View className="border-b-2 border-[#AC87C5] p-2 w-24" />

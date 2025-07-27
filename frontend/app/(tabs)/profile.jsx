@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Modal,
   SafeAreaView,
   ScrollView,
@@ -25,7 +26,7 @@ const Profile = () => {
     deleteAccount,
   } = useAuth();
   const [openProfileModal, setOpenProfileModal] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(null);
 
   const handleNameChange = async () => {
     setName(name.trim());
@@ -34,6 +35,7 @@ const Profile = () => {
       return;
     } else if (name === user.displayName) return;
     await changeName(name);
+    setOpenProfileModal(false);
     Toast.show({
       type: "custom",
       text1: "Success",
@@ -78,7 +80,7 @@ const Profile = () => {
 
   const handleDeleteAccountConfirmation = async () => {
     Alert.alert(
-      "Delete Your Account",
+      "Permanently Delete Your Account",
       "Are you sure you want to delete your account?",
       [
         { text: "No", style: "cancel", isPreferred: false },
@@ -118,12 +120,21 @@ const Profile = () => {
         >
           {/* USER DETAILS */}
           <View className="m-5 mb-1 p-5 flex flex-row items-center justify-around gap-2">
-            <Ionicons
-              className="m-3 p-3 border border-white bg-[#756AB6] rounded-full"
-              name="person"
-              size={32}
-              color="white"
-            />
+            {user.photoURL ? (
+              <Image
+                source={{ uri: user.photoURL }}
+                style={{ height: 50, width: 50 }}
+                className="m-3 p-3 border border-white bg-[#756AB6] rounded-full"
+              />
+            ) : (
+              <Ionicons
+                className="m-3 p-3 border border-white bg-[#756AB6] rounded-full"
+                name="person"
+                size={32}
+                color="white"
+              />
+            )}
+
             <View>
               <Text className="text-xl font-medium max-w-52 text-wrap">
                 {user.displayName || user.name}

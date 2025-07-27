@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import { signInValidationSchema } from "../../utils/authSchema";
+import meetingPic from '../../assets/images/meeting1.png'
 
 const SignIn = () => {
   const { login, signInWithGoogle } = useAuth();
@@ -27,8 +28,9 @@ const SignIn = () => {
   
   return (
     <SafeAreaView className="bg-[#FFE5E5]">
-      <ScrollView contentContainerStyle={{ height: "100%" }}>
+      <ScrollView contentContainerStyle={{ height: "100%", display: "flex", justifyContent: "center" }} className="-mt-20">
         <View className="flex items-center justify-center">
+          <Image source={meetingPic} style={{height: 150, width: 250}} className="m-5" />
           <Text className="text-2xl font-semibold text-[#071952] text-center">
             Welcome Back!
           </Text>
@@ -48,7 +50,7 @@ const SignIn = () => {
                 errors,
                 touched,
               }) => (
-                <View className="flex gap-3 p-5 m-5">
+                <View className="flex gap-3 p-5 m-5 mb-0">
                   <TextInput
                     className="bg-red-200 px-2 rounded-lg border text-[#071952] border-[#071952]"
                     keyboardType="email-address"
@@ -81,7 +83,7 @@ const SignIn = () => {
 
                   <TouchableOpacity
                     onPress={handleSubmit}
-                    className="bg-[#071952] self-center py-2 m-5 w-32 border border-[#756AB6] rounded-lg"
+                    className="bg-[#071952] self-center py-2 m-5 mb-2 w-32 border border-[#756AB6] rounded-lg"
                   >
                     <Text className="text-xl text-white font-semibold text-center">
                       Sign In
@@ -93,7 +95,7 @@ const SignIn = () => {
 
             <View>
               <TouchableOpacity
-                className="flex flex-row items-center justify-center -mt-5"
+                className="flex flex-row items-center justify-center"
                 onPress={() => router.push("/sign-up")}
               >
                 <Text className="text-[#071952] font-semibold">

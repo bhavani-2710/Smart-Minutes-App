@@ -20,7 +20,7 @@ const CustomToast = ({ text1, text2, hide, icon, iconColor }) => {
       : "border-green-900/50";
 
   return (
-    <View className={`w-[90%] ${bgColor} rounded-xl px-4 py-3 flex-row items-center shadow-md border border-black/5`}>
+    <View className={`w-[90%] ${bgColor} rounded-xl px-3 py-2 flex-row items-center shadow-md border border-black/5`}>
       <Ionicons
         className={`p-2 bg-gray-100 m-1 border ${borderColor} rounded-full`}
         name={icon}
@@ -29,8 +29,8 @@ const CustomToast = ({ text1, text2, hide, icon, iconColor }) => {
       />
 
       <View className="flex-1 ml-3">
-        <Text className="text-white font-bold text-lg">{text1}</Text>
-        {text2 && <Text className="text-white text-base">{text2}</Text>}
+        <Text className="text-white font-bold text-base">{text1}</Text>
+        {text2 && <Text className="text-white text-sm">{text2}</Text>}
       </View>
 
       <Ionicons name="close-sharp" size={20} color="white" onPress={hide} />

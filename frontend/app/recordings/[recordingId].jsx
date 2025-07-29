@@ -1,12 +1,53 @@
+import axios from "axios";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { Image, SafeAreaView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import music_player from "../../assets/images/music_player.jpg";
 import AudioPlayer from "../../components/AudioPlayer";
+import { useState } from "react";
+import { Toast } from "toastify-react-native";
 
 export default function RecordingDetail() {
   const router = useRouter();
-  const { url, summary } = useLocalSearchParams();
+  const [mailLoading, setMailLoading] = useState(false);
+  const { url, summary, recordingId } = useLocalSearchParams();
+
+  const sendInEmail = async () => {
+    try {
+      setMailLoading(true);
+      const response = await axios.post(
+        "https://smart-minutes-server.onrender.com/send-email",
+        { recordingId }
+      );
+      if (response.data.status === "success") {
+        Toast.show({
+          type: "custom",
+          text1: "Sent",
+          text2: "Mail sent successfully!",
+          iconColor: "green",
+          icon: "mail-unread",
+        });
+        console.log(response.data.message);
+      }
+    } catch (error) {
+      Toast.show({
+        type: "custom",
+        text1: "Error",
+        text2: "Could not send in mail! Try again later.",
+        iconColor: "red",
+        icon: "mail-unread",
+      });
+      console.log("Error sending mail", error);
+    } finally {
+      setMailLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-[#FFE5E5]">
@@ -22,13 +63,28 @@ export default function RecordingDetail() {
 
       {/* Heading */}
       <View className="flex items-center -mt-8">
-        <Text className="text-2xl text-[#071952] font-bold">RECORDING DETAILS</Text>
+        <Text className="text-2xl text-[#071952] font-bold">
+          RECORDING DETAILS
+        </Text>
         <View className="border border-[#071952] w-3/6 border-b-2 m-1 rounded-full" />
+      </View>
+
+      {/* SEND IN EMAIL */}
+      <View className="mt-[10%] m-2 items-end p-3">
+        <TouchableOpacity
+          onPress={sendInEmail}
+          className="p-3 bg-white rounded-lg flex flex-row gap-2 items-center"
+        >
+          <Ionicons name="mail" size={18} color="#071952" />
+          <Text className="text-[#071952]">
+            {mailLoading ? "Sending....." : "Send in Email"}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {/* Audio Player */}
       <View className="flex items-center justify-between">
-        <View className="mt-[20%] w-96 h-auto bg-white rounded-3xl shadow-md p-5">
+        <View className="w-96 h-auto bg-white rounded-3xl shadow-md p-5">
           <Image
             source={music_player}
             className="w-full h-36 rounded-xl mb-4"
@@ -39,7 +95,9 @@ export default function RecordingDetail() {
 
         {/* Summary Box */}
         <View className="mt-[10%] w-96 h-auto bg-white rounded-3xl shadow-md p-5">
-          <Text className="text-xl font-bold text-gray-800 mb-1">Meeting Summary</Text>
+          <Text className="text-xl font-bold text-gray-800 mb-1">
+            Meeting Summary
+          </Text>
           <Text className="text-sm text-gray-600">
             {summary
               ? summary.trim()
@@ -50,4 +108,3 @@ export default function RecordingDetail() {
     </SafeAreaView>
   );
 }
- 

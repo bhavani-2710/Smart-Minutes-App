@@ -28,8 +28,8 @@ export default function RecordingDetail() {
       if (response.data.status === "success") {
         Toast.show({
           type: "custom",
-          text1: "Sent",
-          text2: "Mail sent successfully!",
+          text1: "Mail sent successfully!",
+          text2: "You will receive the email shortly.",
           iconColor: "green",
           icon: "mail-unread",
         });

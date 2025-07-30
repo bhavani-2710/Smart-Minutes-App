@@ -47,6 +47,7 @@ const Profile = () => {
 
   const handleChangePassword = async () => {
     await changePassword();
+    setOpenProfileModal(false);
     Alert.alert(
       "Password Reset",
       "A Link has been sent to your registered email for resetting password!"

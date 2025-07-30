@@ -13,12 +13,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/ios-dark.png",
-        "backgroundColor": "#FFFFFF",
-        "dark": {
-          "foregroundImage": "./assets/images/ios-light.png",
-          "backgroundColor": "#000000"
-        }
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#FFFFFF"
       },
       "intentFilters": [
         {

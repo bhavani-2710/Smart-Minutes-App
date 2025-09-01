@@ -11,19 +11,25 @@ SmartMinutes is a productivity-focused mobile app designed to simplify the way t
 
 ## 📸 Screenshots
 ### 🔹 Splash & Auth
-<img src="screenshots/splash-screen.png" alt="Splash Screen" width="250"/> 
-<img src="screenshots/sign-in.png" alt="Sign In" width="250"/> 
-<img src="screenshots/sign-up.png" alt="Sign Up" width="250"/> 
+<div style="display: flex; gap: 100px;">
+  <img src="screenshots/splash-screen.jpg" alt="Splash Screen" width="250"/> 
+  <img src="screenshots/sign-in.jpg" alt="Sign In" width="250"/> 
+  <img src="screenshots/sign-up.jpg" alt="Sign Up" width="250"/> 
+</div>
 
 ### 🔹 Main App Flow
-<img src="screenshots/home.png" alt="Home Screen" width="250"/> 
-<img src="screenshots/menu.png" alt="Menu" width="250"/> 
-<img src="screenshots/profile.png" alt="Profile" width="250"/> 
-<img src="screenshots/profile-edit.png" alt="Edit Profile" width="250"/> 
+<div style="display: flex; gap: 100px;">
+  <img src="screenshots/home.jpg" alt="Home Screen" width="250"/> 
+  <img src="screenshots/menu.jpg" alt="Menu" width="250"/> 
+  <img src="screenshots/profile.jpg" alt="Profile" width="250"/> 
+  <img src="screenshots/profile-edit.jpg" alt="Edit Profile" width="250"/> 
+</div>
 
 ### 🔹 Recording & Saved
-<img src="screenshots/recording-summary.png" alt="Recording Summary" width="250"/> 
-<img src="screenshots/saved-recordings.png" alt="Saved Recordings" width="250"/> 
+<div style="display: flex; gap: 100px;">
+  <img src="screenshots/recording-summary.jpg" alt="Recording Summary" width="250"/> 
+  <img src="screenshots/saved-recordings.jpg" alt="Saved Recordings" width="250"/> 
+</div>
 
 ## 🛠️ Tech Stack
 - Frontend / App: Expo (React Native)

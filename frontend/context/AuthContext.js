@@ -177,7 +177,7 @@ export const AuthProvider = ({ children }) => {
     await signOut(auth);
     setUser(null);
     AsyncStorage.removeItem("userUID");
-    router.replace("/");
+    router.replace("/(auth)/sign-in");
   };
 
   const changeName = async (newName) => {
